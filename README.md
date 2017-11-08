@@ -9,13 +9,13 @@ compatibility with old addons or different documentation source (in case you hav
 the default in Skript).
 
 ## Download and Usage
-Every API usage is explained in [Wiki](/wiki) and in [Javadoc](http://skunity.com/javadoc).
+Every API usage is explained in [Wiki](https://github.com/Tuke-Nuke/skUnityAPI/wiki) and in [Javadoc](http://skunity.com/javadoc).
 
 ## Contributions and Issues
-For any API issues, use the [issue tracker](/issues). In case you have suggestion to improve/fix the API, just make a 
-[pull request](/pulls) with basic information of your suggestion/changes. Any help or opinions are acceptable.
+For any API issues, use the [issue tracker](https://github.com/Tuke-Nuke/skUnityAPI/issues). In case you have suggestion to improve/fix the API, just make a 
+[pull request](https://github.com/Tuke-Nuke/skUnityAPI/pulls) with basic information of your suggestion/changes. Any help or opinions are acceptable.
 
 ## License
 
-This API is under [GPL-3](/blob/master/LICENSE). 
+This API is under [GPL-3](/LICENSE). 
 
