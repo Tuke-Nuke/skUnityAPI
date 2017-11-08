@@ -17,5 +17,5 @@ For any API issues, use the [issue tracker](/issues). In case you have suggestio
 
 ## License
 
-This API is under [GPL-3](blob/master/license.yml). 
+This API is under [GPL-3](/blob/master/LICENSE). 
 
