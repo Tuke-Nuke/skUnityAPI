@@ -12,8 +12,8 @@ import java.util.Arrays;
  * An object to represent a Skript syntax. It can be created manually, setting each value, or with {@link SyntaxGetter}
  * to get based in Skript's syntax objects or with {@link JsonSyntaxConverter} which is used internally to get a syntax
  * from a JSON (when requesting all addon syntaxes).<br>
- * You will only need if you want to manually add a syntax or in case, somehow, it isn't loaded automatically
- * (see {@link Documentation#loadAutomatically(Type...)}).
+ * You will only need if you want to manually add a syntax or in case, somehow, it isn't loaded automatically.
+ * @see Documentation#loadAutomatically(Syntax.Type...)
  */
 public class Syntax {
 	/**
@@ -213,10 +213,12 @@ public class Syntax {
 
 	/**
 	 * Get a specific field of an syntax, such as name or description.
+	 * @param <T> A {@link String}, {@link String[]}, {@link Type} or {@link Integer}
 	 * @param field The {@link Field}
 	 * @return It returns {@link Type} if the field is {@link Field#TYPE}, {@link String[]} if the field are
 	 * {@link Field#EVENT_VALUES} or {@link Field#CHANGERS}, the {@link ClassInfo} if the field is {@link Field#RETURN_TYPE}
 	 * (for expressions only), {@link Integer} if {@link Field#ID} or just {@link String} for the rest.
+	 * @throws ClassCastException if the value is not casted properly.
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> T get(Field field) {
@@ -242,6 +244,7 @@ public class Syntax {
 
 	/**
 	 * Set a specific field of the Syntax to a value.
+	 * @param <T> A {@link String}, {@link String[]}, {@link Type} or {@link Integer}
 	 * @param field The field to set the value.
 	 * @param object The field's value, following the same type from {@link #get(Field)}, some fields requires specific
 	 *               object types

@@ -28,11 +28,10 @@ import java.util.stream.Collectors;
  * <br>
  * This API should be run once you want to upload new or edited syntaxes, so to prevent it be triggered in every server
  * that the addon is in, the API only works with a private key, which you can get it from skUnity docs page, and put the
- * key in a file called <code>plugins/&ltAddon folder&gt/addon.key</code> (you need to create yourself). Now every time this object is created, it will
+ * key in a file called <code>plugins/&lt;Addon folder&gt;/addon.key</code> (you need to create yourself). Now every time this object is created, it will
  * check skUnity for your addon's syntaxes and compare them if there is something new or edited locally, and them it sends
- * directly to skUnity. More info about this API in <a href="github.com/skUnity/DocsAPI">Github</a>.
+ * directly to skUnity. More info about this API in <a href="https://github.com/Tuke-Nuke/skUnityAPI/wiki">Github</a>.
  *
- * @author https://skunity.com
  */
 public class Documentation {
 
@@ -130,15 +129,14 @@ public class Documentation {
 	 * Some group indexes (<code>1¦|2¦</code>...) and escaped values
 	 * (removes all <code>\\</code> that is used to escape the next char).<br>
 	 * Examples:
-	 * <code><pre>
-	 *     (1¦one|2¦two) of %player% -&gt (one|two) of player
+	 * <pre><code>
+	 *     (1¦one|2¦two) of %player% -&gt; (one|two) of player
 	 *
-	 *     do \function\(%objects%\) -&gt do \function(%objects%)
-	 *     //Note: the slash before 'function' wasn't escaped because '\f' isn't a escaped character.
+	 *     do \\function\(%objects%\) -&gt; do \function(%objects%)
 	 *
 	 *     //For Types only, it converts from java regex to Skript regex
-	 *     some ?example(s)? -&gt some[ ]example[s]
-	 * </pre></code>
+	 *     some ?example(s)? -&gt; some[ ]example[s]
+	 * </code></pre>
 	 *
 	 * @param value True to make a friendly syntax.
 	 * @return Its own instance
@@ -153,32 +151,32 @@ public class Documentation {
 	 * Since Skript doesn't track the addon owner of a given element, it will find the addon by checking its package names. <br>
 	 * Your syntax must be at same package level of your main class, for example:<br>
 	 * Same package, it will find it fine.<br>
-	 * <code><pre>
+	 * <pre><code>
 	 * Main class: ch.njol.skript.Skript
-	 * Base package of syntaxes: ch.njol.skript.&ltsyntax type&gt
-	 * </pre></code>
+	 * Base package of syntaxes: ch.njol.skript.&lt;syntax type&gt;
+	 * </code></pre>
 	 * Different packages, it won't find them.<br>
-	 * <code><pre>
+	 * <pre><code>
 	 * Main class: ch.njol.core.Skript
-	 * Base package of syntaxes: ch.njol.elements.&ltsyntax type&gt
-	 * </pre></code>
+	 * Base package of syntaxes: ch.njol.elements.&lt;syntax type&gt;
+	 * </code></pre>
 	 * For <b>events</b>, it will check the package from {@link SkriptEvent} class.
 	 * If you use {@link ch.njol.skript.lang.util.SimpleEvent (from Skript)} to register your events, it won't find
 	 * these events. To fix it, just create a class extending SkriptEvent and use it instead.<br>
 	 * For <b>conditions</b>, <b>effects</b> and <b>expressions</b>, it will check the <b>syntax class's package</b>.<br>
-	 * For <b>types</b>, it will check one of the following classes to match your addon.
-	 * <p><ul>
+	 * For <b>types</b>, it will check one of the following classes to match your addon.<br>
+	 * <ul>
 	 *     <li>The {@link Parser}, if not null, then.</li>
 	 *     <li>The {@link Changer}, if not null, then.</li>
 	 *     <li>The {@link Serializer}, if not null, then.</li>
 	 *     <li>The {@link ClassInfo} itself.</li>
-	 * </ul></p>
+	 * </ul>
 	 * For the last option, you will need to create your class that extends {@link ClassInfo}, so this way the object will have your addon's package.
-	 * @param types An array of {@link com.skunity.docs.Syntax.Type} that should be loaded automatically. By default, is setted to all {@link Syntax.Type}
+	 * @param types An array of {@link com.skunity.docs.Syntax.Type} that should be loaded automatically. By default, is setted to all {@link Syntax.Type Syntax.Types}
 	 * @return Its own instance
 	 */
 	public Documentation loadAutomatically(Syntax.Type... types) {
-		this.automaticallyLoad = types;
+		//automaticallyLoad = types;
 		return this;
 	}
 	/**

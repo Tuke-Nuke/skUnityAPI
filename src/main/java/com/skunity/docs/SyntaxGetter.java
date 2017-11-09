@@ -23,22 +23,21 @@ import java.util.regex.Pattern;
  * for all possible {@link com.skunity.docs.Syntax.Field} except {@link com.skunity.docs.Syntax.Field#ID} since it is
  * used internally. If you are extending that class, it is also used to detect if an syntax came from your addon, so
  * you <b>must</b> check if the Skript's syntax object represents your addon. By default, it is checked in method
- * {@link #get(Syntax.Field, Class)} by comparing the packages.
+ * {@link #getFromClass(Syntax.Field, Class)} by comparing the packages.
  *
- * <code><pre>
- * public String[] get(Syntax.Field fieldParameter, Class classParameter) {
+ * <pre><code>
+ * public String[] getFromClass(Syntax.Field fieldParameter, Class classParameter) {
  *     switch (fieldParameter) {
- *         case ADDON: return super.get(fielParameter, classParameter);
+ *         case ADDON: return super.getFromClass(fielParameter, classParameter);
  *         //Check for all other fields you wan't to override. Only necessary in case you have your own documentation
  *         //system which doesn't use Skript annotations.
  *     }
  *     //In case you don't want to override all fields getter, you can just call super here instead.
- *     return super.get(fielParameter, classParameter);
+ *     return super.getFromClass(fielParameter, classParameter);
  * }
- * </pre></code>
+ * </code></pre>
  *
  * Useful in case you have your own documentation methods, such as different annotations or external access.
- *
  * @see Documentation#loadAutomatically(Syntax.Type...)
  */
 public class SyntaxGetter {
@@ -87,12 +86,12 @@ public class SyntaxGetter {
 	 * Get the syntax info from {@link Class}.
 	 * @param field The Field of what it wants
 	 * @param source The class of syntax, such as {@link Effect}, {@link Condition} or {@link Expression}. But in case
-	 * {@link #get(Syntax.Field, SkriptEventInfo)} or {@link #get(Syntax.Field, ClassInfo)} returns a null array, it
+	 * {@link #getFromEvent(Syntax.Field, SkriptEventInfo)} or {@link #getFromClassInfo(Syntax.Field, ClassInfo)} returns a null array, it
 	 *               will by default call this method as well, sending {@link SkriptEvent} or {@link ClassInfo}.
 	 * @return An array of {@link String} of information. It can return a null or empty array.
 	 */
 	@SuppressWarnings("unchecked")
-	public String[] get(Syntax.Field field, Class<?> source) {
+	public String[] getFromClass(Syntax.Field field, Class<?> source) {
 		if (field == null || source == null)
 			return null;
 		switch (field) {
@@ -171,8 +170,8 @@ public class SyntaxGetter {
 	 * @param source The {@link Effect}, {@link Condition} or {@link Expression} info.
 	 * @return An array of {@link String} of information. It can return a null or empty array.
 	 */
-	public String[] get(Syntax.Field field, SyntaxElementInfo source) {
-		String[] result = get(field, source.c);
+	public String[] getFromElement(Syntax.Field field, SyntaxElementInfo source) {
+		String[] result = getFromClass(field, source.c);
 		if (!StringUtils.isArrayEmpty(result))
 			return result;
 		switch (field) {
@@ -195,7 +194,7 @@ public class SyntaxGetter {
 	 * @param source The event syntax info.
 	 * @return An array of {@link String} of information. It can return a null or empty array.
 	 */
-	public String[] get(Syntax.Field field, SkriptEventInfo source) {
+	public String[] getFromEvent(Syntax.Field field, SkriptEventInfo source) {
 		String[] result = null;
 		switch (field) {
 			case NAME: result = new String[]{source.getName()}; break;
@@ -213,7 +212,7 @@ public class SyntaxGetter {
 			case DEPENDENCY: break; //No methods available in Skript object for it, so lets try the class annotation
 		}
 		if (result == null || result.length == 0 || StringUtils.isArrayEmpty(result))
-			result = get(field, source.c);
+			result = getFromClass(field, source.c);
 		return result;
 	}
 
@@ -223,7 +222,7 @@ public class SyntaxGetter {
 	 * @param source The class syntax info.
 	 * @return An array of {@link String} of information. It can return a null or empty array.
 	 */
-	public String[] get(Syntax.Field field, ClassInfo source) {
+	public String[] getFromClassInfo(Syntax.Field field, ClassInfo source) {
 		String[] result = null;
 		switch (field) {
 			case NAME: result = new String[]{source.getDocName()}; break;
@@ -246,10 +245,16 @@ public class SyntaxGetter {
 			case DEPENDENCY: break; //No methods available in Skript object for it, so lets try the class annotation
 		}
 		if (result == null || result.length == 0 || StringUtils.isArrayEmpty(result))
-			result = get(field, source);
+			result = getFromClassInfo(field, source);
 		return result;
 	}
 
+	/**
+	 * Used internally to get a Syntax object from any Skript documentation objects.
+	 * @param syntaxObject It receives {@link SkriptEvent}, {@link SyntaxElementInfo} (conditions, effects and expressions)
+	 *
+	 * @return
+	 */
 	protected Syntax getSyntax(Object syntaxObject) {
 		Syntax.Type type = Syntax.Type.getByClass(syntaxObject.getClass());
 		if (type == null || !check(syntaxObject))
@@ -258,13 +263,13 @@ public class SyntaxGetter {
 		for (Syntax.Field field : type.getFields()) {
 			Object result;
 			if (syntaxObject instanceof SkriptEventInfo)
-				result = get(field, (SkriptEventInfo)syntaxObject);
+				result = getFromEvent(field, (SkriptEventInfo)syntaxObject);
 			else if (syntaxObject instanceof SyntaxElementInfo)
-				result = get(field, (SyntaxElementInfo) syntaxObject);
+				result = getFromElement(field, (SyntaxElementInfo) syntaxObject);
 			else if (syntaxObject instanceof ClassInfo)
-				result = get(field, (ClassInfo)syntaxObject);
+				result = getFromClassInfo(field, (ClassInfo)syntaxObject);
 			else if (syntaxObject instanceof Class)
-				result = get(field, (Class) syntaxObject);
+				result = getFromClass(field, (Class) syntaxObject);
 			else
 				throw new IllegalArgumentException("The parameter is not a SkriptEventoInfo, ClassInfo, SyntaxElementInfo " +
 						"nor a class");
